@@ -36,7 +36,7 @@ def Appoint(request):
 
         )
         myappointments.save()
-        return redirect('/appointment')
+        return redirect('/show')
     else:
         return render(request,'appointment.html')
 
@@ -54,3 +54,12 @@ def conta(request):
         return redirect('/contact')
     else:
         return render(request,'contact.html')
+
+def show(request):
+    all = Appointments.objects.all()
+    return render(request,'show.html',{'all':all})
+
+def delete(request,id):
+    deleteappointment = Appointments.objects.get(id=id)
+    deleteappointment.delete()
+    return redirect('/show')
