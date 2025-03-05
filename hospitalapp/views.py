@@ -1,5 +1,5 @@
 
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from hospitalapp.models import *
 # Create your views here.
 
@@ -60,6 +60,21 @@ def show(request):
     return render(request,'show.html',{'all':all})
 
 def delete(request,id):
-    deleteappointment = Appointments.objects.get(id=id)
+    deleteappointment=Appointments.objects.get(id=id)
     deleteappointment.delete()
     return redirect('/show')
+
+def edit(request,id):
+    appointment = get_object_or_404(Appointments,id=id)
+    if request.method == 'POST':
+        appointment.name=request.POST.get('name')
+        appointment.email=request.POST.get('email')
+        appointment.phone=request.POST.get('phone')
+        appointment.date=request.POST.get('date')
+        appointment.department=request.POST.get('department')
+        appointment.doctor=request.POST.get('doctor')
+        appointment.message=request.POST.get('message')
+        appointment.save()
+        return redirect('/show')
+    else:
+        return render(request,'edit.html',{'appointment':appointment})
